@@ -6,7 +6,18 @@ sealed class AuthenticationState extends Equatable {
   List<Object?> get props => [];
 }
 
+class InitialAuthentication extends AuthenticationState {}
+
 class LoadingAuthentication extends AuthenticationState {}
+
+class ErrorAuthentication extends AuthenticationState {
+  final String message;
+
+  ErrorAuthentication({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
 
 class UnloggedAuthentication extends AuthenticationState {}
 

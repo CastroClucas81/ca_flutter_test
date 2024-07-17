@@ -1,47 +1,59 @@
-import 'dart:developer';
-
+import 'package:blue_challenge/src/core/failures/failures.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/dtos/credential_dto.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/entities/tokenization_entity.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/services/i_authentication_service.dart';
-import 'package:blue_challenge/src/modules/authentication/interactor/states/authentication_state.dart';
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthenticationService extends IAuthenticationService {
-  final _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth;
+
+  FirebaseAuthenticationService({required FirebaseAuth firebaseAuth})
+      : _firebaseAuth = firebaseAuth;
 
   @override
-  Future<AuthenticationState> checkAuthentication() async {
-    final token = await _firebaseAuth.currentUser?.getIdToken();
-
-    if (token == null) return UnloggedAuthentication();
-
-    return LoggedAuthentication(
-      tokenization: TokenizationEntity(tokenId: token),
-    );
-  }
-
-  @override
-  Future<AuthenticationState> loginWithEmailAndPassword(
-      CredentialDTO dto) async {
+  Future<Either<Failure, TokenizationEntity?>> checkAuthentication() async {
     try {
-      inspect(dto);
+      final token = await _firebaseAuth.currentUser?.getIdToken();
 
-      final result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: dto.email,
-        password: dto.password,
+      return Right(
+        token != null ? TokenizationEntity(tokenId: token) : null,
       );
-
-      inspect(result);
-
-      return await checkAuthentication();
+    } on Failure catch (e) {
+      return Left(e);
     } catch (e) {
-      log('dfsdfsfdsfd $e');
-      return UnloggedAuthentication();
+      return Left(UnexpectedFailure(message: e.toString()));
     }
   }
 
   @override
-  Future<void> signOut() async {
-    _firebaseAuth.signOut();
+  Future<Either<Failure, TokenizationEntity?>> loginWithEmailAndPassword(
+    CredentialDTO dto,
+  ) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: dto.email,
+        password: dto.password,
+      );
+
+      return await checkAuthentication();
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(UnexpectedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+
+      return const Right(unit);
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(UnexpectedFailure(message: e.toString()));
+    }
   }
 }

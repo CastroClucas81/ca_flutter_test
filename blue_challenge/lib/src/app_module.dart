@@ -5,9 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class AppModule extends Module {
   @override
-  List<Module> get imports => [
-        AuthenticationModule(),
-      ];
+  List<Module> get imports => [AuthenticationModule()];
 
   @override
   void routes(r) {

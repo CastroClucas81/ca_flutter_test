@@ -1,12 +1,14 @@
+import 'package:blue_challenge/src/core/failures/failures.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/dtos/credential_dto.dart';
-import 'package:blue_challenge/src/modules/authentication/interactor/states/authentication_state.dart';
+import 'package:blue_challenge/src/modules/authentication/interactor/entities/tokenization_entity.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class IAuthenticationService {
-  Future<AuthenticationState> loginWithEmailAndPassword(
+  Future<Either<Failure, TokenizationEntity?>> loginWithEmailAndPassword(
     CredentialDTO dto,
   );
 
-  Future<AuthenticationState> checkAuthentication();
+  Future<Either<Failure, TokenizationEntity?>> checkAuthentication();
 
-  Future<void> signOut();
+  Future<Either<Failure, Unit>> signOut();
 }

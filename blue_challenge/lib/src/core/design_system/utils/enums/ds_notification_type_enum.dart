@@ -1,0 +1,4 @@
+enum DSNotificationTypeEnum {
+  success,
+  error,
+}

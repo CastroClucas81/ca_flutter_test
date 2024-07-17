@@ -1,6 +1,5 @@
-import 'package:asp/asp.dart';
-import 'package:blue_challenge/src/modules/authentication/interactor/atoms/authentication_atom.dart';
-import 'package:blue_challenge/src/modules/authentication/interactor/dtos/credential_dto.dart';
+import 'package:blue_challenge/src/modules/authentication/ui/widgets/tabs/login_authentication_tab.dart';
+import 'package:blue_challenge/src/modules/authentication/ui/widgets/tabs/login_intro_tab.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,40 +10,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final pageController = PageController();
+
+  void jumpToNext() {
+    pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
+
+  void jumpToPrevious() {
+    pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select(() => authenticationState.value);
-
     return Scaffold(
-      body: Column(
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
         children: [
-          TextFormField(
-            controller: emailController,
-            decoration: const InputDecoration(
-              label: Text('E-mail'),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: passwordController,
-            decoration: const InputDecoration(
-              label: Text('Password'),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              loginWithEmailAndPasswordState.setValue(CredentialDTO(
-                email: emailController.text,
-                password: passwordController.text,
-              ));
-            },
-            icon: const Icon(Icons.login),
-            label: const Text('Enter'),
-          )
+          LoginIntroTab(jumpToNext: jumpToNext),
+          LoginAuthenticationTab(jumpToPrevious: jumpToPrevious),
         ],
       ),
     );
@@ -52,8 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    pageController.dispose();
     super.dispose();
   }
 }

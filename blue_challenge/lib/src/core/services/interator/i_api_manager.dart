@@ -1,4 +1,4 @@
-import 'package:blue_challenge/src/core/utils/content_type_enum.dart';
+import 'package:blue_challenge/src/core/utils/enums/content_type_enum.dart';
 import 'package:dio/dio.dart';
 
 abstract class IApiManager {

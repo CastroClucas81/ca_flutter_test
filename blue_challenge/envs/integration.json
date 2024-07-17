@@ -1,4 +1,5 @@
 {
   "appName": "[INT] Blue challenge",
-  "baseUrl": "https://pokeapi.co/api/v2"
+  "baseUrl": "https://pokeapi.co/api/v2",
+  "baseGifUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown"
 }

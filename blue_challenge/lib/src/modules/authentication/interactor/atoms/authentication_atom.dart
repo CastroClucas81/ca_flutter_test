@@ -4,7 +4,7 @@ import 'package:blue_challenge/src/modules/authentication/interactor/states/auth
 
 /// states
 final authenticationState = Atom<AuthenticationState>(
-  LoadingAuthentication(),
+  InitialAuthentication(),
   key: 'authenticationState',
 );
 

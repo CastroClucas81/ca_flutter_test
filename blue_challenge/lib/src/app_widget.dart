@@ -1,4 +1,5 @@
 import 'package:asp/asp.dart';
+import 'package:blue_challenge/generated/l10n.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/atoms/authentication_atom.dart';
 import 'package:blue_challenge/src/modules/authentication/interactor/states/authentication_state.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,8 @@ class _AppWidgetState extends State<AppWidget> {
 
     return MaterialApp.router(
       title: 'Blue Challenge',
+      localizationsDelegates: const [S.delegate],
+      supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
       routerConfig: Modular.routerConfig,
     );

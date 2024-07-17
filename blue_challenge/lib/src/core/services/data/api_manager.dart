@@ -1,12 +1,12 @@
-import 'package:blue_challenge/src/core/failures/failures.dart';
-import 'package:blue_challenge/src/core/utils/content_type_enum.dart';
+import 'package:blue_challenge/src/core/utils/enums/content_type_enum.dart';
+import 'package:blue_challenge/src/core/utils/mixins/handle_api_error.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../interator/i_api_manager.dart';
 
-class ApiManager implements IApiManager {
+class ApiManager with HandleApiError implements IApiManager {
   CancelToken cancelToken = CancelToken();
   late final Dio _dio;
 
@@ -22,13 +22,14 @@ class ApiManager implements IApiManager {
     if (kDebugMode) {
       _dio.interceptors.add(
         PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseBody: true,
-            responseHeader: false,
-            error: true,
-            compact: true,
-            maxWidth: 90),
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90,
+        ),
       );
     }
     _dio.options.connectTimeout = const Duration(seconds: 30);
@@ -55,7 +56,7 @@ class ApiManager implements IApiManager {
 
       return response.data;
     } catch (error) {
-      throw const ServerFailure(message: 'Unexpected error');
+      throw handleError(error);
     }
   }
 
@@ -80,7 +81,7 @@ class ApiManager implements IApiManager {
 
       return response.data;
     } catch (error) {
-      throw const ServerFailure(message: 'Unexpected error');
+      throw handleError(error);
     }
   }
 
@@ -101,7 +102,7 @@ class ApiManager implements IApiManager {
 
       return response.data;
     } catch (error) {
-      throw const ServerFailure(message: 'Unexpected error');
+      throw handleError(error);
     }
   }
 
@@ -126,7 +127,7 @@ class ApiManager implements IApiManager {
 
       return response.data;
     } catch (error) {
-      throw const ServerFailure(message: 'Unexpected error');
+      throw handleError(error);
     }
   }
 
@@ -152,7 +153,7 @@ class ApiManager implements IApiManager {
 
       return response.data;
     } catch (error) {
-      throw const ServerFailure(message: 'Unexpected error');
+      throw handleError(error);
     }
   }
 }
